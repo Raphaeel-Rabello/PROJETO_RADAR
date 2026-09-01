@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RADAR - Inteligência de Oportunidades</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-slate-900 font-sans flex h-screen overflow-hidden">
+
+    <!-- BARRA LATERAL IDÊNTICA AO PRINT -->
+    <aside class="w-64 bg-[#fafafa] border-r border-slate-200 flex flex-col justify-between p-4 select-none">
+        <div>
+            <!-- Busca na Barra Lateral -->
+            <div class="bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-400 flex items-center gap-2 mb-4">
+                <span>🔍</span> Pesquisar...
+            </div>
+            
+            <!-- Menu de Navegação -->
+            <nav class="space-y-1">
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium bg-slate-200 text-slate-900">🏠 Visão geral</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">👥 Usuários</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">📊 Dados</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">📈 Análises</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">🎯 Marketing</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">🌐 Domínios</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">🔌 Integrações</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">🔒 Segurança</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">💻 Código</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">🤖 Agentes</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">⚡ Fluxos de trabalho</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">🕒 Registros</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">🔌 API</a>
+                <a href="#" class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100">⚙️ Configurações</a>
+            </nav>
+        </div>
+        <div class="text-xs text-slate-400 px-3">RADAR Enterprise v1.0</div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="flex-1 overflow-y-auto p-8 bg-white">
+        <!-- Topo: Pré-visualização e Botões -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex gap-2">
+                <span class="bg-slate-100 px-3 py-1.5 rounded-md text-xs font-semibold border border-slate-200">Pré-visualização</span>
+                <span class="bg-white px-3 py-1.5 rounded-md text-xs font-medium border border-slate-200 text-slate-500">Painel</span>
+            </div>
+            <div class="flex gap-2">
+                <button class="px-3 py-1.5 rounded-md border border-slate-200 text-xs font-medium hover:bg-slate-50">Atualizar</button>
+                <button class="px-3 py-1.5 rounded-md bg-black text-white text-xs font-medium hover:bg-slate-800">Publicar</button>
+            </div>
+        </div>
+
+        <!-- Card Principal do Aplicativo -->
+        <div class="border border-slate-200 rounded-xl p-6 mb-6 shadow-sm">
+            <div class="flex items-start gap-4">
+                <div class="bg-[#0b1329] text-white w-14 h-14 rounded-xl flex items-center justify-center text-2xl shrink-0">📡</div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-center">
+                        <h1 class="text-lg font-bold text-slate-900">RADAR</h1>
+                        <span class="text-slate-400 cursor-pointer">⭐</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                        Sistema independente que monitora fontes públicas em tempo real para identificar, qualificar e priorizar oportunidades de negócios com base em intenção e necessidade.
+                    </p>
+                    <div class="text-[11px] text-slate-400 mt-2">Criado há 2 horas</div>
+                </div>
+            </div>
+            <div class="flex gap-2 mt-4 pt-4 border-t border-slate-100">
+                <button class="px-3 py-1.5 rounded-md border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50">🔗 Ganhar créditos</button>
+                <button class="px-3 py-1.5 rounded-md border border-slate-200 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50">⏱️ Ver uso</button>
+            </div>
+        </div>
+
+        <!-- Formulário de Inserção de Novo Sinal -->
+        <div class="bg-slate-950 text-white rounded-xl p-6 mb-6 border border-slate-800">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="text-xl">🔍</div>
+                <div>
+                    <h3 class="font-semibold text-sm">Analisar novo sinal</h3>
+                    <p class="text-xs text-slate-400">Entrada manual para validar fontes públicas e autorizadas</p>
+                </div>
+            </div>
+            <form id="signalForm" class="space-y-3">
+                <textarea id="signalText" placeholder="Cole aqui o texto público relevante (mínimo de 12 caracteres)..." class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-slate-600 h-20 resize-none"></textarea>
+                <div class="flex gap-3">
+                    <input type="text" id="signalUrl" placeholder="URL pública (opcional)" class="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-slate-600">
+                    <button type="submit" class="bg-white text-slate-950 px-5 py-2 rounded-lg text-xs font-semibold hover:bg-slate-200 transition-colors">Classificar sinal</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Grid de Estatísticas -->
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                <div class="text-sm mb-2">🔥</div>
+                <div id="statHigh" class="text-2xl font-bold text-rose-600">0</div>
+                <div class="text-xs text-slate-500 font-medium mt-1">Alta prioridade</div>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                <div class="text-sm mb-2">🎯</div>
+                <div id="statMedium" class="text-2xl font-bold text-amber-600">0</div>
+                <div class="text-xs text-slate-500 font-medium mt-1">Possíveis oportunidades</div>
+            </div>
+            <div class="bg-slate-50 border border-slate-200 rounded-xl p-4">
+                <div class="text-sm mb-2">📦</div>
+                <div id="statLow" class="text-2xl font-bold text-slate-600">0</div>
+                <div class="text-xs text-slate-500 font-medium mt-1">Baixa relevância</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script para interagir com o Back-End em FastAPI -->
+    <script>
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+                document.getElementById('statHigh').innerText = data.high;
+                document.getElementById('statMedium').innerText = data.medium;
+                document.getElementById('statLow').innerText = data.low;
+            } catch (err) {
+                console.error("Erro ao carregar estatísticas", err);
+            }
+        }
+
+        document.getElementById('signalForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = document.getElementById('signalText').value;
+            const url = document.getElementById('signalUrl').value;
+
+            if (text.trim().length < 12) {
+                alert("O texto precisa ter pelo menos 12 caracteres.");
+                return;
+            }
+
+            const response = await fetch('/api/signals', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, url })
+            });
+
+            if (response.ok) {
+                alert("Sinal processado e salvo com sucesso!");
+                document.getElementById('signalText').value = '';
+                document.getElementById('signalUrl').value = '';
+                loadStats();
+            } else {
+                alert("Erro ao processar o sinal.");
+            }
+        });
+
+        loadStats();
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.vercel/
+*.db
+*.db.*
+*_backup*
+*.backup
+*.corrompido_backup
+*.antes_*
+users_recuperado.*
+ver_estrutura_radar.py
+RADAR_DIAGNOSTICO.txt
+_ARQUIVO_RADAR/

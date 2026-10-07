@@ -1,0 +1,2844 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RADAR — Inteligência de Oportunidades</title>
+
+    <meta
+        name="description"
+        content="RADAR — Sistema Autônomo de Inteligência de Necessidades e Oportunidades."
+    >
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        radar: {
+                            50: "#eef7ff",
+                            100: "#d9edff",
+                            200: "#bce0ff",
+                            300: "#8dccff",
+                            400: "#58b5ff",
+                            500: "#2497f3",
+                            600: "#1179d4",
+                            700: "#0d60aa",
+                            800: "#104f89",
+                            900: "#124373"
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system,
+                BlinkMacSystemFont, "Segoe UI", sans-serif;
+            transition: background-color .2s, color .2s;
+        }
+
+        .glass {
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .scrollbar::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .scrollbar::-webkit-scrollbar-thumb {
+            border-radius: 999px;
+            background: #94a3b8;
+        }
+
+        .fade-in {
+            animation: fadeIn .25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .priority-high {
+            border-left: 4px solid #ef4444;
+        }
+
+        .priority-medium {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .priority-low {
+            border-left: 4px solid #22c55e;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+
+    <!-- LOGIN -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-6">
+
+        <div class="w-full max-w-md">
+
+            <div class="text-center mb-8">
+                <div
+                    class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl
+                    bg-radar-600 text-white text-2xl font-black shadow-xl"
+                >
+                    R
+                </div>
+
+                <h1 class="text-3xl font-black tracking-tight">
+                    RADAR
+                </h1>
+
+                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                    Inteligência Autônoma de Necessidades e Oportunidades
+                </p>
+            </div>
+
+            <div
+                class="rounded-3xl bg-white p-7 shadow-xl ring-1 ring-slate-200
+                dark:bg-slate-900 dark:ring-slate-800"
+            >
+
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold">
+                        Acessar sua conta
+                    </h2>
+
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                        Entre para acessar seu painel RADAR.
+                    </p>
+                </div>
+
+                <form id="loginForm" class="space-y-4">
+
+                    <div>
+                        <label class="mb-1 block text-sm font-semibold">
+                            E-mail
+                        </label>
+
+                        <input
+                            id="email"
+                            type="email"
+                            autocomplete="email"
+                            value="raphaelgarciarabelo@gmail.com"
+                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3
+                            outline-none transition focus:border-radar-500 focus:ring-2
+                            focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950"
+                            required
+                        >
+                    </div>
+
+                    <div>
+                        <label class="mb-1 block text-sm font-semibold">
+                            Senha
+                        </label>
+
+                        <input
+                            id="password"
+                            type="password"
+                            autocomplete="current-password"
+                            class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3
+                            outline-none transition focus:border-radar-500 focus:ring-2
+                            focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950"
+                            required
+                        >
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full rounded-xl bg-radar-600 px-4 py-3 font-bold text-white
+                        shadow-lg shadow-radar-600/20 transition hover:bg-radar-700"
+                    >
+                        Entrar no RADAR
+                    </button>
+
+                    <div
+                        id="loginMessage"
+                        class="hidden rounded-xl p-3 text-sm"
+                    ></div>
+
+                </form>
+
+                <button
+                    type="button"
+                    id="showRegisterButton"
+                    class="mt-4 w-full rounded-xl border border-radar-600 px-4 py-3 font-bold
+                    text-radar-700 transition hover:bg-radar-50
+                    dark:text-radar-400 dark:hover:bg-slate-800"
+                >
+                    Criar uma conta
+                </button>
+                <div class="mt-6 border-t border-slate-200 pt-5 text-center
+                    dark:border-slate-800">
+
+                    <p class="text-xs text-slate-500 dark:text-slate-400">
+                        Proteção de conta e autenticação segura.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- REGISTER -->
+    <div id="registerScreen" class="hidden min-h-screen flex items-center justify-center bg-slate-100 p-4 dark:bg-slate-950">
+
+        <div class="w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+
+            <div class="mb-6 text-center">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-radar-600 text-2xl font-black text-white">
+                    R
+                </div>
+
+                <h2 class="text-2xl font-black">Criar sua conta</h2>
+
+                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                    Faça seu cadastro para começar a usar o RADAR.
+                </p>
+            </div>
+
+            <form id="registerForm" class="space-y-4">
+
+                <div>
+                    <label class="mb-1 block text-sm font-semibold">Nome completo</label>
+                    <input
+                        id="registerName"
+                        type="text"
+                        autocomplete="name"
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-radar-500 focus:ring-2 focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950"
+                        required
+                    >
+                </div>
+
+
+                <div>
+                    <label class="mb-1 block text-sm font-semibold">Nome de exibição <span class="font-normal text-slate-500">(opcional)</span></label>
+                    <input
+                        id="registerDisplayName"
+                        type="text"
+                        autocomplete="nickname"
+                        maxlength="120"
+                        placeholder="Como você quer ser chamado no RADAR?"
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-radar-500 focus:ring-2 focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950"
+                    >
+                    <p class="mt-1 text-xs text-slate-500">Esse nome será usado na interface e nas comunicações do RADAR quando possível.</p>
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-semibold">E-mail</label>
+                    <input
+                        id="registerEmail"
+                        type="email"
+                        autocomplete="email"
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-radar-500 focus:ring-2 focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-semibold">Senha</label>
+                    <input
+                        id="registerPassword"
+                        type="password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-radar-500 focus:ring-2 focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950"
+                        required
+                    >
+                    <p class="mt-1 text-xs text-slate-500">
+                        Use pelo menos 8 caracteres.
+                    </p>
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-semibold">Tipo de conta</label>
+
+                    <select
+                        id="registerAccountType"
+                        class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-radar-500 focus:ring-2 focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950"
+                        required
+                    >
+                        <option value="pessoa_fisica">Pessoa física</option>
+                        <option value="profissional">Profissional</option>
+                        <option value="empresa">Empresa</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="mb-1 block text-sm font-semibold">Telefone</label>
+                    <input id="registerPhone" type="tel" autocomplete="tel" placeholder="(21) 99999-9999" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-radar-500 focus:ring-2 focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950">
+                </div>
+
+                <div id="registerCpfGroup">
+                    <label class="mb-1 block text-sm font-semibold">CPF</label>
+                    <input id="registerCpf" type="text" autocomplete="off" placeholder="000.000.000-00" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-radar-500 focus:ring-2 focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950">
+                </div>
+
+                <div id="registerCnpjGroup" class="hidden">
+                    <label class="mb-1 block text-sm font-semibold">CNPJ</label>
+                    <input id="registerCnpj" type="text" autocomplete="off" placeholder="00.000.000/0000-00" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-radar-500 focus:ring-2 focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950">
+                </div>
+
+                <div id="registerBirthDateGroup">
+                    <label class="mb-1 block text-sm font-semibold">Data de nascimento</label>
+                    <input id="registerBirthDate" type="date" autocomplete="bday" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-radar-500 focus:ring-2 focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950">
+                </div>
+
+                <div id="registerProfessionalTypeGroup" class="hidden">
+                    <label class="mb-1 block text-sm font-semibold">Tipo profissional</label>
+                    <input id="registerProfessionalType" type="text" placeholder="Ex.: advogado, contador, técnico..." class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-radar-500 focus:ring-2 focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950">
+                </div>
+
+                <div id="registerCompanyNameGroup" class="hidden">
+                    <label class="mb-1 block text-sm font-semibold">Nome da empresa</label>
+                    <input id="registerCompanyName" type="text" autocomplete="organization" placeholder="Nome da empresa" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-radar-500 focus:ring-2 focus:ring-radar-500/20 dark:border-slate-700 dark:bg-slate-950">
+                </div>
+                <label class="flex items-start gap-3 text-sm">
+                    <input id="registerTerms" type="checkbox" class="mt-1" required>
+                    <span>
+                        Li e concordo com os
+                        <button type="button" onclick="openLegalDocument('terms')" class="font-semibold text-radar-600 hover:underline">Termos de Uso</button>.
+                    </span>
+                </label>
+
+                <label class="flex items-start gap-3 text-sm">
+                    <input id="registerPrivacy" type="checkbox" class="mt-1" required>
+                    <span>
+                        Li e concordo com a
+                        <button type="button" onclick="openLegalDocument('privacy')" class="font-semibold text-radar-600 hover:underline">Política de Privacidade</button>.
+                    </span>
+                </label>
+
+                <div id="registerMessage" class="hidden rounded-xl p-3 text-sm"></div>
+
+                <button
+                    type="submit"
+                    class="w-full rounded-xl bg-radar-600 px-4 py-3 font-bold text-white shadow-lg transition hover:bg-radar-700"
+                >
+                    Criar minha conta
+                </button>
+
+                <button
+                    type="button"
+                    id="backToLoginButton"
+                    class="w-full rounded-xl border border-slate-300 px-4 py-3 font-bold transition hover:bg-slate-50 dark:border-slate-700 dark:hover:bg-slate-800"
+                >
+                    Voltar para o login
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- APPLICATION -->
+    <div id="appScreen" class="hidden min-h-screen">
+
+        <!-- TOPBAR -->
+        <header
+            class="sticky top-0 z-40 border-b border-slate-200 bg-white/90 glass
+            dark:border-slate-800 dark:bg-slate-950/90"
+        >
+
+            <div class="flex h-16 items-center justify-between px-4 lg:px-6">
+
+                <div class="flex items-center gap-3">
+
+                    <button
+                        id="mobileMenuButton"
+                        class="rounded-xl p-2 hover:bg-slate-100
+                        dark:hover:bg-slate-800 lg:hidden"
+                    >
+                        ☰
+                    </button>
+
+                    <div
+                        class="flex h-10 w-10 items-center justify-center rounded-xl
+                        bg-radar-600 font-black text-white"
+                    >
+                        R
+                    </div>
+
+                    <div>
+                        <div class="font-black tracking-tight">
+                            RADAR
+                        </div>
+
+                        <div class="hidden text-[10px] font-medium text-slate-500 sm:block">
+                            Intelligence Platform
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex items-center gap-2">
+
+                    <button
+                        id="themeButton"
+                        class="rounded-xl px-3 py-2 text-sm hover:bg-slate-100
+                        dark:hover:bg-slate-800"
+                        title="Alterar tema"
+                    >
+                        🌙
+                    </button>
+
+                    <button
+                        id="languageButton"
+                        class="hidden rounded-xl px-3 py-2 text-sm hover:bg-slate-100
+                        dark:hover:bg-slate-800 sm:block"
+                    >
+                        PT
+                    </button>
+
+                    <button
+                        id="profileButton"
+                        class="flex items-center gap-2 rounded-xl px-3 py-2
+                        hover:bg-slate-100 dark:hover:bg-slate-800"
+                    >
+                        <span
+                            id="userAvatar"
+                            class="flex h-8 w-8 items-center justify-center rounded-full
+                            bg-radar-100 font-bold text-radar-700
+                            dark:bg-radar-900 dark:text-radar-200"
+                        >
+                            R
+                        </span>
+
+                        <span
+                            id="userNameTop"
+                            class="hidden max-w-32 truncate text-sm font-semibold md:block"
+                        >
+                            Usuário
+                        </span>
+                    </button>
+
+                    <button
+                        id="logoutButton"
+                        class="rounded-xl px-3 py-2 text-sm font-semibold text-red-600
+                        hover:bg-red-50 dark:hover:bg-red-950/30"
+                    >
+                        Sair
+                    </button>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- LAYOUT -->
+        <div class="flex">
+
+            <!-- SIDEBAR -->
+            <aside
+                id="sidebar"
+                class="fixed inset-y-16 left-0 z-30 hidden w-64 border-r
+                border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950
+                lg:block"
+            >
+
+                <nav class="space-y-1">
+
+                    <button
+                        data-page="dashboard"
+                        class="navButton active w-full rounded-xl px-4 py-3 text-left
+                        text-sm font-semibold hover:bg-radar-50 dark:hover:bg-slate-900"
+                    >
+                        🏠 Início
+                    </button>
+
+                    <button
+                        data-page="opportunities"
+                        class="navButton w-full rounded-xl px-4 py-3 text-left
+                        text-sm font-semibold hover:bg-radar-50 dark:hover:bg-slate-900"
+                    >
+                        🎯 Oportunidades
+                    </button>
+
+                    <button
+                        data-page="radar"
+                        class="navButton w-full rounded-xl px-4 py-3 text-left
+                        text-sm font-semibold hover:bg-radar-50 dark:hover:bg-slate-900"
+                    >
+                        📡 Radar
+                    </button>
+
+                    <button
+                        data-page="analytics"
+                        class="navButton w-full rounded-xl px-4 py-3 text-left
+                        text-sm font-semibold hover:bg-radar-50 dark:hover:bg-slate-900"
+                    >
+                        📊 Análises
+                    </button>
+
+                    <button
+                        data-page="alerts"
+                        class="navButton w-full rounded-xl px-4 py-3 text-left
+                        text-sm font-semibold hover:bg-radar-50 dark:hover:bg-slate-900"
+                    >
+                        🔔 Alertas
+                    </button>
+
+                    <div class="my-5 border-t border-slate-200 dark:border-slate-800"></div>
+
+                    <button
+                        data-page="profile"
+                        class="navButton w-full rounded-xl px-4 py-3 text-left
+                        text-sm font-semibold hover:bg-radar-50 dark:hover:bg-slate-900"
+                    >
+                        👤 Meu perfil
+                    </button>
+
+                    <button
+                        data-page="documents"
+                        class="navButton w-full rounded-xl px-4 py-3 text-left
+                        text-sm font-semibold hover:bg-radar-50 dark:hover:bg-slate-900"
+                    >
+                        📄 Documentos
+                    </button>
+
+                    <button
+                        data-page="security"
+                        class="navButton w-full rounded-xl px-4 py-3 text-left
+                        text-sm font-semibold hover:bg-radar-50 dark:hover:bg-slate-900"
+                    >
+                        🔐 Segurança
+                    </button>
+
+                    <button
+                        data-page="support"
+                        class="navButton w-full rounded-xl px-4 py-3 text-left
+                        text-sm font-semibold hover:bg-radar-50 dark:hover:bg-slate-900"
+                    >
+                        🛟 Suporte
+                    </button>
+
+                    <button
+                        data-page="settings"
+                        class="navButton w-full rounded-xl px-4 py-3 text-left
+                        text-sm font-semibold hover:bg-radar-50 dark:hover:bg-slate-900"
+                    >
+                        ⚙️ Configurações
+                    </button>
+
+                </nav>
+
+                <div
+                    class="absolute bottom-5 left-4 right-4 rounded-2xl border
+                    border-radar-100 bg-radar-50 p-4 dark:border-radar-900
+                    dark:bg-radar-950/30"
+                >
+
+                    <div class="text-xs font-bold text-radar-700 dark:text-radar-300">
+                        RADAR IA
+                    </div>
+
+                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                        Motor inteligente de oportunidades.
+                    </p>
+
+                </div>
+
+            </aside>
+
+
+            <!-- MOBILE SIDEBAR -->
+            <aside
+                id="mobileSidebar"
+                class="fixed inset-y-16 left-0 z-50 hidden w-72 border-r
+                border-slate-200 bg-white p-4 shadow-xl dark:border-slate-800
+                dark:bg-slate-950 lg:hidden"
+            >
+
+                <div class="space-y-1">
+
+                    <button data-page="dashboard" class="mobileNavButton w-full rounded-xl p-3 text-left font-semibold">
+                        🏠 Início
+                    </button>
+
+                    <button data-page="opportunities" class="mobileNavButton w-full rounded-xl p-3 text-left font-semibold">
+                        🎯 Oportunidades
+                    </button>
+
+                    <button data-page="radar" class="mobileNavButton w-full rounded-xl p-3 text-left font-semibold">
+                        📡 Radar
+                    </button>
+
+                    <button data-page="profile" class="mobileNavButton w-full rounded-xl p-3 text-left font-semibold">
+                        👤 Meu perfil
+                    </button>
+
+                    <button data-page="documents" class="mobileNavButton w-full rounded-xl p-3 text-left font-semibold">
+                        📄 Documentos
+                    </button>
+
+                    <button data-page="security" class="mobileNavButton w-full rounded-xl p-3 text-left font-semibold">
+                        🔐 Segurança
+                    </button>
+
+                    <button data-page="support" class="mobileNavButton w-full rounded-xl p-3 text-left font-semibold">
+                        🛟 Suporte
+                    </button>
+
+                    <button data-page="settings" class="mobileNavButton w-full rounded-xl p-3 text-left font-semibold">
+                        ⚙️ Configurações
+                    </button>
+
+                </div>
+
+            </aside>
+
+
+            <!-- MAIN -->
+            <main class="min-h-[calc(100vh-4rem)] flex-1 lg:ml-64">
+
+                <div class="mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+
+                    <!-- DASHBOARD -->
+                    <section id="page-dashboard" class="page fade-in">
+
+                        <div class="mb-8">
+                            <p class="text-sm font-semibold text-radar-600">
+                                PAINEL PRINCIPAL
+                            </p>
+
+                            <h1
+                                class="mt-1 text-2xl font-black tracking-tight sm:text-3xl"
+                            >
+                                Olá, <span id="welcomeName">usuário</span> 👋
+                            </h1>
+
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Aqui está o resumo atual do seu RADAR.
+                            </p>
+                        </div>
+
+
+                        <!-- STATS -->
+                        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+                            <div class="rounded-2xl bg-white p-5 shadow-sm ring-1
+                                ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+
+                                <div class="text-sm text-slate-500">
+                                    Sinais detectados
+                                </div>
+
+                                <div id="statSignals"
+                                    class="mt-2 text-3xl font-black">
+                                    0
+                                </div>
+
+                            </div>
+
+                            <div class="rounded-2xl bg-white p-5 shadow-sm ring-1
+                                ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+
+                                <div class="text-sm text-slate-500">
+                                    Oportunidades
+                                </div>
+
+                                <div id="statOpportunities"
+                                    class="mt-2 text-3xl font-black">
+                                    0
+                                </div>
+
+                            </div>
+
+                            <div class="rounded-2xl bg-white p-5 shadow-sm ring-1
+                                ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+
+                                <div class="text-sm text-slate-500">
+                                    Alta prioridade
+                                </div>
+
+                                <div id="statHigh"
+                                    class="mt-2 text-3xl font-black text-red-500">
+                                    0
+                                </div>
+
+                            </div>
+
+                            <div class="rounded-2xl bg-white p-5 shadow-sm ring-1
+                                ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+
+                                <div class="text-sm text-slate-500">
+                                    Disponíveis
+                                </div>
+
+                                <div id="statAvailable"
+                                    class="mt-2 text-3xl font-black text-emerald-500">
+                                    0
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- WELCOME CARD -->
+                        <div
+                            class="mt-6 rounded-3xl bg-gradient-to-br from-radar-700
+                            to-radar-500 p-6 text-white shadow-xl sm:p-8"
+                        >
+
+                            <div class="max-w-3xl">
+
+                                <div class="mb-3 text-sm font-bold uppercase tracking-wider opacity-80">
+                                    Inteligência de oportunidades
+                                </div>
+
+                                <h2 class="text-2xl font-black sm:text-3xl">
+                                    Encontre necessidades antes que elas virem oportunidades perdidas.
+                                </h2>
+
+                                <p class="mt-3 max-w-2xl text-sm leading-6 text-white/80">
+                                    O RADAR identifica sinais, analisa intenção,
+                                    classifica necessidades e ajuda você a encontrar
+                                    oportunidades relevantes.
+                                </p>
+
+                                <button
+                                    data-page="opportunities"
+                                    class="mt-6 rounded-xl bg-white px-5 py-3
+                                    text-sm font-bold text-radar-700 shadow-lg
+                                    hover:bg-slate-100"
+                                >
+                                    Ver oportunidades
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- OPPORTUNITIES -->
+                    <section id="page-opportunities" class="page hidden fade-in">
+
+                        <div class="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+
+                            <div>
+                                <p class="text-sm font-semibold text-radar-600">
+                                    RADAR
+                                </p>
+
+                                <h1 class="text-2xl font-black sm:text-3xl">
+                                    Oportunidades
+                                </h1>
+
+                                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                    Sinais classificados pelo motor do RADAR.
+                                </p>
+                            </div>
+
+                            <button
+                                id="refreshOpportunities"
+                                class="rounded-xl border border-slate-300 bg-white px-4 py-2
+                                text-sm font-semibold hover:bg-slate-50
+                                dark:border-slate-700 dark:bg-slate-900 dark:hover:bg-slate-800"
+                            >
+                                ↻ Atualizar
+                            </button>
+
+                        </div>
+
+                        <div id="opportunitiesContainer" class="space-y-5">
+                            <div class="rounded-2xl bg-white p-8 text-center text-slate-500
+                                shadow-sm dark:bg-slate-900">
+                                Carregando oportunidades...
+                            </div>
+                        </div>
+
+                    </section>
+
+
+                    <!-- RADAR -->
+                    <section id="page-radar" class="page hidden fade-in">
+
+                        <div class="mb-6">
+                            <p class="text-sm font-semibold text-radar-600">
+                                INTELIGÊNCIA
+                            </p>
+
+                            <h1 class="text-2xl font-black sm:text-3xl">
+                                Radar de Necessidades
+                            </h1>
+
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Área preparada para monitoramento e detecção automática.
+                            </p>
+                        </div>
+
+                        <div class="grid gap-5 lg:grid-cols-3">
+
+                            <div class="rounded-2xl bg-white p-6 shadow-sm ring-1
+                                ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+
+                                <div class="text-3xl">📡</div>
+
+                                <h3 class="mt-4 font-bold">
+                                    Coleta
+                                </h3>
+
+                                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                    Fontes públicas e autorizadas poderão alimentar o RADAR.
+                                </p>
+
+                            </div>
+
+                            <div class="rounded-2xl bg-white p-6 shadow-sm ring-1
+                                ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+
+                                <div class="text-3xl">🧠</div>
+
+                                <h3 class="mt-4 font-bold">
+                                    Inteligência
+                                </h3>
+
+                                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                    A IA identifica necessidade, intenção e urgência.
+                                </p>
+
+                            </div>
+
+                            <div class="rounded-2xl bg-white p-6 shadow-sm ring-1
+                                ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+
+                                <div class="text-3xl">🎯</div>
+
+                                <h3 class="mt-4 font-bold">
+                                    Qualificação
+                                </h3>
+
+                                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                    Oportunidades recebem score e prioridade.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ANALYTICS -->
+                    <section id="page-analytics" class="page hidden fade-in">
+
+                        <div class="mb-6">
+                            <h1 class="text-2xl font-black sm:text-3xl">
+                                Análises
+                            </h1>
+
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Indicadores estratégicos do RADAR.
+                            </p>
+                        </div>
+
+                        <div class="rounded-2xl bg-white p-8 shadow-sm
+                            dark:bg-slate-900">
+
+                            <div class="text-4xl">📊</div>
+
+                            <h2 class="mt-4 text-xl font-bold">
+                                Central de análises
+                            </h2>
+
+                            <p class="mt-2 max-w-xl text-sm text-slate-500 dark:text-slate-400">
+                                Gráficos, tendências, categorias e evolução do RADAR
+                                serão disponibilizados nesta área.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ALERTS -->
+                    <section id="page-alerts" class="page hidden fade-in">
+
+                        <div class="mb-6">
+                            <h1 class="text-2xl font-black sm:text-3xl">
+                                Alertas
+                            </h1>
+
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Notificações importantes do seu RADAR.
+                            </p>
+                        </div>
+
+                        <div class="rounded-2xl bg-white p-8 shadow-sm
+                            dark:bg-slate-900">
+
+                            <div class="text-4xl">🔔</div>
+
+                            <h2 class="mt-4 text-xl font-bold">
+                                Nenhum alerta novo
+                            </h2>
+
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Quando houver uma oportunidade ou evento importante,
+                                aparecerá aqui.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- PROFILE -->
+                    <section id="page-profile" class="page hidden fade-in">
+
+                        <div class="mb-6">
+                            <p class="text-sm font-semibold text-radar-600">
+                                CONTA
+                            </p>
+
+                            <h1 class="text-2xl font-black sm:text-3xl">
+                                Meu perfil
+                            </h1>
+
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Configure seus dados e preferências.
+                            </p>
+                        </div>
+
+                        <div class="grid gap-5 lg:grid-cols-3">
+
+                            <div class="rounded-2xl bg-white p-6 shadow-sm
+                                dark:bg-slate-900">
+
+                                <div class="flex items-center gap-4">
+
+                                    <div
+                                        id="profileAvatar"
+                                        class="flex h-16 w-16 items-center justify-center
+                                        rounded-2xl bg-radar-100 text-xl font-black
+                                        text-radar-700 dark:bg-radar-900 dark:text-radar-200"
+                                    >
+                                        R
+                                    </div>
+
+                                    <div>
+                                        <div id="profileName"
+                                            class="font-bold">
+                                            Usuário
+                                        </div>
+
+                                        <div id="profileEmail"
+                                            class="text-sm text-slate-500">
+                                            —
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="mt-6 rounded-xl bg-slate-50 p-4
+                                    dark:bg-slate-800">
+
+                                    <div class="text-xs font-semibold uppercase
+                                        text-slate-500">
+                                        Status da conta
+                                    </div>
+
+                                    <div class="mt-1 font-bold text-emerald-500">
+                                        Ativa
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="rounded-2xl bg-white p-6 shadow-sm lg:col-span-2
+                                dark:bg-slate-900">
+
+                                <h2 class="font-bold">
+                                    Informações da conta
+                                </h2>
+
+                                <div class="mt-5 grid gap-4 sm:grid-cols-2">
+
+                                    <div>
+                                        <div class="text-xs font-semibold text-slate-500">
+                                            Nome
+                                        </div>
+                                        <div id="profileNameField"
+                                            class="mt-1 font-medium">
+                                            —
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="text-xs font-semibold text-slate-500">
+                                            E-mail
+                                        </div>
+                                        <div id="profileEmailField"
+                                            class="mt-1 font-medium break-all">
+                                            —
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="text-xs font-semibold text-slate-500">
+                                            Tipo de conta
+                                        </div>
+                                        <div id="profileAccountType"
+                                            class="mt-1 font-medium">
+                                            —
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="text-xs font-semibold text-slate-500">
+                                            Créditos
+                                        </div>
+                                        <div id="profileCredits"
+                                            class="mt-1 font-medium">
+                                            —
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="mt-6">
+
+                                    <button
+                                        id="editProfileButton"
+                                        class="rounded-xl bg-radar-600 px-5 py-3
+                                        text-sm font-bold text-white hover:bg-radar-700"
+                                    >
+                                        Editar perfil
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- DOCUMENTS -->
+                    <section id="page-documents" class="page hidden fade-in">
+
+                        <div class="mb-6">
+                            <p class="text-sm font-semibold text-radar-600">
+                                PRIVACIDADE
+                            </p>
+
+                            <h1 class="text-2xl font-black sm:text-3xl">
+                                Meus documentos
+                            </h1>
+
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Área preparada para documentos enviados voluntariamente
+                                ou solicitados para uma finalidade específica.
+                            </p>
+                        </div>
+
+                        <div class="rounded-2xl border border-dashed border-slate-300
+                            bg-white p-8 text-center dark:border-slate-700
+                            dark:bg-slate-900">
+
+                            <div class="text-5xl">📎</div>
+
+                            <h2 class="mt-4 text-xl font-bold">
+                                Seus documentos
+                            </h2>
+
+                            <p class="mx-auto mt-2 max-w-lg text-sm text-slate-500
+                                dark:text-slate-400">
+                                Você poderá escolher entre preencher seus dados
+                                manualmente ou enviar documentos quando isso for
+                                necessário.
+                            </p>
+
+                            <button
+                                class="mt-6 rounded-xl bg-radar-600 px-5 py-3
+                                text-sm font-bold text-white opacity-60"
+                                disabled
+                            >
+                                Adicionar documento
+                            </button>
+
+                            <p class="mt-3 text-xs text-slate-400">
+                                Upload seguro será ativado na próxima etapa.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- SECURITY -->
+                    <section id="page-security" class="page hidden fade-in">
+
+                        <div class="mb-6">
+                            <p class="text-sm font-semibold text-radar-600">
+                                PROTEÇÃO
+                            </p>
+
+                            <h1 class="text-2xl font-black sm:text-3xl">
+                                Segurança
+                            </h1>
+
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Controle e proteção da sua conta.
+                            </p>
+                        </div>
+
+                        <div class="grid gap-5 md:grid-cols-2">
+
+                            <div class="rounded-2xl bg-white p-6 shadow-sm
+                                dark:bg-slate-900">
+
+                                <div class="text-3xl">🔐</div>
+
+                                <h2 class="mt-4 font-bold">
+                                    Proteção da conta
+                                </h2>
+
+                                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                    Autenticação, sessões e mecanismos de proteção
+                                    serão administrados nesta área.
+                                </p>
+
+                            </div>
+
+                            <div class="rounded-2xl bg-white p-6 shadow-sm
+                                dark:bg-slate-900">
+
+                                <div class="text-3xl">🛡️</div>
+
+                                <h2 class="mt-4 font-bold">
+                                    Central de segurança
+                                </h2>
+
+                                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                    Incidentes e revisões de segurança poderão ser
+                                    acompanhados pelo usuário e pelo suporte.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- SUPPORT -->
+                    <section id="page-support" class="page hidden fade-in">
+
+                        <div class="mb-6">
+                            <p class="text-sm font-semibold text-radar-600">
+                                AJUDA
+                            </p>
+
+                            <h1 class="text-2xl font-black sm:text-3xl">
+                                Suporte
+                            </h1>
+
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Precisa de ajuda? A equipe poderá acompanhar
+                                seus protocolos por aqui.
+                            </p>
+                        </div>
+
+                        <div class="grid gap-5 md:grid-cols-2">
+
+                            <div class="rounded-2xl bg-white p-6 shadow-sm
+                                dark:bg-slate-900">
+
+                                <div class="text-4xl">🛟</div>
+
+                                <h2 class="mt-4 font-bold">
+                                    Central de atendimento
+                                </h2>
+
+                                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                    Abra um atendimento para problemas de conta,
+                                    segurança ou utilização da plataforma.
+                                </p>
+
+                                <button
+                                    class="mt-5 rounded-xl bg-radar-600 px-5 py-3
+                                    text-sm font-bold text-white opacity-60"
+                                    disabled
+                                >
+                                    Abrir atendimento
+                                </button>
+
+                            </div>
+
+                            <div class="rounded-2xl bg-white p-6 shadow-sm
+                                dark:bg-slate-900">
+
+                                <div class="text-4xl">📋</div>
+
+                                <h2 class="mt-4 font-bold">
+                                    Meus protocolos
+                                </h2>
+
+                                <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                    Acompanhe solicitações e análises relacionadas
+                                    à sua conta.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- SETTINGS -->
+                    <section id="page-settings" class="page hidden fade-in">
+
+                        <div class="mb-6">
+                            <p class="text-sm font-semibold text-radar-600">
+                                PERSONALIZAÇÃO
+                            </p>
+
+                            <h1 class="text-2xl font-black sm:text-3xl">
+                                Configurações
+                            </h1>
+
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Personalize sua experiência no RADAR.
+                            </p>
+                        </div>
+
+                        <div class="space-y-5">
+
+                            <div class="rounded-2xl bg-white p-6 shadow-sm
+                                dark:bg-slate-900">
+
+                                <h2 class="font-bold">
+                                    Aparência
+                                </h2>
+
+                                <div class="mt-4 flex flex-wrap gap-3">
+
+                                    <button
+                                        data-theme="light"
+                                        class="themeChoice rounded-xl border border-slate-300
+                                        px-4 py-3 text-sm font-semibold
+                                        dark:border-slate-700"
+                                    >
+                                        ☀️ Claro
+                                    </button>
+
+                                    <button
+                                        data-theme="dark"
+                                        class="themeChoice rounded-xl border border-slate-300
+                                        px-4 py-3 text-sm font-semibold
+                                        dark:border-slate-700"
+                                    >
+                                        🌙 Escuro
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="rounded-2xl bg-white p-6 shadow-sm
+                                dark:bg-slate-900">
+
+                                <h2 class="font-bold">
+                                    Idioma
+                                </h2>
+
+                                <select
+                                    id="languageSelect"
+                                    class="mt-4 rounded-xl border border-slate-300
+                                    bg-white px-4 py-3 text-sm
+                                    dark:border-slate-700 dark:bg-slate-950"
+                                >
+                                    <option value="pt-BR">
+                                        🇧🇷 Português
+                                    </option>
+
+                                    <option value="en-US">
+                                        🇺🇸 English
+                                    </option>
+
+                                    <option value="es-ES">
+                                        🇪🇸 Español
+                                    </option>
+                                </select>
+
+                                <p class="mt-3 text-xs text-slate-400">
+                                    Tradução completa será adicionada na etapa de internacionalização.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const API = "";
+
+        const token = () => localStorage.getItem("token");
+
+        const $ = (id) => document.getElementById(id);
+
+
+        /* =========================
+           THEME
+        ========================= */
+
+        function applyTheme(theme) {
+
+            if (theme === "dark") {
+                document.documentElement.classList.add("dark");
+            } else {
+                document.documentElement.classList.remove("dark");
+            }
+
+            localStorage.setItem("radar_theme", theme);
+
+            $("themeButton").textContent =
+                theme === "dark" ? "☀️" : "🌙";
+        }
+
+
+        function loadTheme() {
+
+            const saved =
+                localStorage.getItem("radar_theme") || "light";
+
+            applyTheme(saved);
+        }
+
+
+        $("themeButton").addEventListener("click", () => {
+
+            const current =
+                localStorage.getItem("radar_theme") || "light";
+
+            applyTheme(
+                current === "dark" ? "light" : "dark"
+            );
+
+        });
+
+
+        document.querySelectorAll(".themeChoice").forEach(button => {
+
+            button.addEventListener("click", () => {
+
+                applyTheme(button.dataset.theme);
+
+            });
+
+        });
+
+
+        /* =========================
+           LOGIN
+        ========================= */
+
+        $("loginForm").addEventListener("submit", async (event) => {
+
+            event.preventDefault();
+
+            const email = $("email").value.trim();
+            const password = $("password").value;
+
+            const message = $("loginMessage");
+
+            message.className =
+                "rounded-xl bg-slate-100 p-3 text-sm text-slate-600 dark:bg-slate-800 dark:text-slate-300";
+
+            message.textContent = "Entrando...";
+
+            message.classList.remove("hidden");
+
+            try {
+
+                const response = await fetch("/auth/login", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+
+                });
+
+
+                const data = await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.detail || "Não foi possível entrar."
+                    );
+
+                }
+
+
+                localStorage.setItem(
+                    "token",
+                    data.access_token
+                );
+
+
+                message.className =
+                    "rounded-xl bg-emerald-50 p-3 text-sm text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-300";
+
+                message.textContent =
+                    "Login realizado. Carregando RADAR...";
+
+
+                await loadApplication();
+
+
+            } catch (error) {
+
+                message.className =
+                    "rounded-xl bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950/30 dark:text-red-300";
+
+                message.textContent =
+                    error.message || "Erro ao realizar login.";
+
+            }
+
+        });
+
+
+        /* =========================
+           APPLICATION
+        ========================= */
+
+        async function loadApplication() {
+
+            if (!token()) {
+
+                $("loginScreen").classList.remove("hidden");
+                $("appScreen").classList.add("hidden");
+
+                return;
+
+            }
+
+
+            try {
+
+                const response = await fetch("/users/me", {
+
+                    headers: {
+                        Authorization: "Bearer " + token()
+                    }
+
+                });
+
+
+                if (!response.ok) {
+
+                    throw new Error("Sessão inválida.");
+
+                }
+
+
+                const user = await response.json();
+
+                window.radarUser = user;
+
+
+                $("loginScreen").classList.add("hidden");
+                $("appScreen").classList.remove("hidden");
+
+
+                updateUserInterface(user);
+
+                await loadDashboard();
+
+                await loadOpportunities();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                localStorage.removeItem("token");
+
+                $("loginScreen").classList.remove("hidden");
+                $("appScreen").classList.add("hidden");
+
+            }
+
+        }
+
+
+        function updateUserInterface(user) {
+
+            const name =
+                user.name || "Usuário";
+
+            const email =
+                user.email || "—";
+
+            const initial =
+                name.trim().charAt(0).toUpperCase() || "U";
+
+
+            $("userNameTop").textContent = name;
+            $("userAvatar").textContent = initial;
+
+            $("welcomeName").textContent = name.split(" ")[0];
+
+            $("profileName").textContent = name;
+            $("profileEmail").textContent = email;
+
+            $("profileAvatar").textContent = initial;
+
+            $("profileNameField").textContent = name;
+            $("profileEmailField").textContent = email;
+
+            $("profileAccountType").textContent =
+                formatAccountType(user.account_type);
+
+            $("profileCredits").textContent =
+                user.credits ?? 0;
+
+        }
+
+
+        function formatAccountType(type) {
+
+            const map = {
+                pessoa_fisica: "Pessoa física",
+                profissional: "Profissional",
+                empresa: "Empresa"
+            };
+
+            return map[type] || type || "Não informado";
+
+        }
+
+
+        /* =========================
+           DASHBOARD
+        ========================= */
+
+        async function loadDashboard() {
+
+            try {
+
+                const response = await fetch("/dashboard/", {
+
+                    headers: {
+                        Authorization: "Bearer " + token()
+                    }
+
+                });
+
+
+                if (!response.ok) {
+                    return;
+                }
+
+
+                const data = await response.json();
+
+
+                $("statSignals").textContent =
+                    data.signals ?? 0;
+
+                $("statOpportunities").textContent =
+                    data.opportunities ?? 0;
+
+                $("statHigh").textContent =
+                    data.priorities?.alta ?? 0;
+
+                $("statAvailable").textContent =
+                    data.opportunities_available ?? 0;
+
+
+            } catch (error) {
+
+                console.error(
+                    "Erro ao carregar dashboard:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =========================
+           OPPORTUNITIES
+        ========================= */
+
+        async function loadOpportunities() {
+
+            const container =
+                $("opportunitiesContainer");
+
+            container.innerHTML = `
+                <div class="rounded-2xl bg-white p-8 text-center text-slate-500 shadow-sm dark:bg-slate-900">
+                    Carregando oportunidades...
+                </div>
+            `;
+
+
+            try {
+
+                const response = await fetch(
+                    "/opportunities/",
+                    {
+                        headers: {
+                            Authorization:
+                                "Bearer " + token()
+                        }
+                    }
+                );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Não foi possível carregar as oportunidades."
+                    );
+
+                }
+
+
+                const opportunities =
+                    await response.json();
+
+
+                if (!opportunities.length) {
+
+                    container.innerHTML = `
+                        <div class="rounded-2xl bg-white p-10 text-center shadow-sm dark:bg-slate-900">
+                            <div class="text-5xl">📡</div>
+                            <h2 class="mt-4 text-xl font-bold">
+                                Nenhuma oportunidade encontrada
+                            </h2>
+                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                Quando o RADAR identificar novas oportunidades,
+                                elas aparecerão aqui.
+                            </p>
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                container.innerHTML =
+                    opportunities.map(
+                        renderOpportunity
+                    ).join("");
+
+
+            } catch (error) {
+
+                container.innerHTML = `
+                    <div class="rounded-2xl bg-red-50 p-6 text-red-700 dark:bg-red-950/30 dark:text-red-300">
+                        ${escapeHtml(error.message)}
+                    </div>
+                `;
+
+            }
+
+        }
+
+
+        function renderOpportunity(op) {
+
+            const priorityClass =
+                op.priority === "ALTA"
+                    ? "priority-high"
+                    : op.priority === "MEDIA"
+                        ? "priority-medium"
+                        : "priority-low";
+
+
+            const priorityBadge =
+                op.priority === "ALTA"
+                    ? "bg-red-100 text-red-700 dark:bg-red-950/40 dark:text-red-300"
+                    : op.priority === "MEDIA"
+                        ? "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300"
+                        : "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300";
+
+
+            return `
+
+                <article
+                    class="fade-in ${priorityClass}
+                    rounded-2xl bg-white p-5 shadow-sm ring-1
+                    ring-slate-200 dark:bg-slate-900 dark:ring-slate-800"
+                >
+
+                    <div class="flex flex-col gap-4 lg:flex-row lg:justify-between">
+
+                        <div class="min-w-0">
+
+                            <div class="flex flex-wrap items-center gap-2">
+
+                                <span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-bold
+                                    text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                                    #${op.id}
+                                </span>
+
+                                <span class="rounded-lg px-2 py-1 text-xs font-bold ${priorityBadge}">
+                                    ${escapeHtml(op.priority || "—")}
+                                </span>
+
+                                <span class="rounded-lg bg-slate-100 px-2 py-1 text-xs font-semibold
+                                    text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                                    ${escapeHtml(op.status || "—")}
+                                </span>
+
+                            </div>
+
+                            <h2 class="mt-4 text-lg font-black">
+                                ${escapeHtml(op.need || "Necessidade identificada")}
+                            </h2>
+
+                            <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                                ${escapeHtml(op.text || "Sem texto disponível.")}
+                            </p>
+
+                        </div>
+
+
+                        <div class="shrink-0 lg:text-right">
+
+                            <div class="text-xs font-semibold uppercase text-slate-400">
+                                Score
+                            </div>
+
+                            <div class="text-3xl font-black text-radar-600">
+                                ${Number(op.score ?? 0).toFixed(1)}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+
+                        ${infoCard("🎯", "Intenção", op.intent)}
+                        ${infoCard("🚨", "Urgência", op.urgency)}
+                        ${infoCard("🏷️", "Categoria", op.category)}
+                        ${infoCard("📍", "Localização", op.location)}
+
+                    </div>
+
+
+                    <div class="mt-4 grid gap-3 sm:grid-cols-2">
+
+                        ${infoCard("📂", "Subcategoria", op.subcategory)}
+                        ${infoCard("📡", "Fonte", op.source)}
+
+                    </div>
+
+
+                    <div class="mt-5 rounded-xl bg-slate-50 p-4 dark:bg-slate-800/70">
+
+                        <div class="text-xs font-bold uppercase tracking-wide text-slate-400">
+                            Motivo da classificação
+                        </div>
+
+                        <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                            ${escapeHtml(op.classification_reason || "Não informado.")}
+                        </p>
+
+                    </div>
+
+
+                    ${
+                        op.suggested_response
+                            ? `
+                                <div class="mt-4 rounded-xl border border-radar-100
+                                    bg-radar-50 p-4 dark:border-radar-900
+                                    dark:bg-radar-950/30">
+
+                                    <div class="text-xs font-bold uppercase tracking-wide
+                                        text-radar-700 dark:text-radar-300">
+                                        Resposta sugerida
+                                    </div>
+
+                                    <p class="mt-2 text-sm leading-6 text-slate-700
+                                        dark:text-slate-300">
+                                        ${escapeHtml(op.suggested_response)}
+                                    </p>
+
+                                </div>
+                            `
+                            : ""
+                    }
+
+
+                    <div class="mt-5 flex flex-wrap items-center justify-between gap-3">
+
+                        <div class="text-xs text-slate-400">
+
+                            ${op.published_at
+                                ? "Publicado: " +
+                                  new Date(op.published_at).toLocaleString("pt-BR")
+                                : ""
+                            }
+
+                        </div>
+
+
+                        ${
+                            op.url
+                                ? `
+                                    <a
+                                        href="${safeUrl(op.url)}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="rounded-xl border border-slate-300 px-4 py-2
+                                        text-sm font-semibold hover:bg-slate-50
+                                        dark:border-slate-700 dark:hover:bg-slate-800"
+                                    >
+                                        Ver origem ↗
+                                    </a>
+                                `
+                                : ""
+                        }
+
+                    </div>
+
+                </article>
+            `;
+
+        }
+
+
+        function infoCard(icon, label, value) {
+
+            return `
+
+                <div class="rounded-xl bg-slate-50 p-3 dark:bg-slate-800/70">
+
+                    <div class="text-xs text-slate-400">
+                        ${icon} ${escapeHtml(label)}
+                    </div>
+
+                    <div class="mt-1 text-sm font-semibold">
+                        ${escapeHtml(value || "—")}
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+
+        function escapeHtml(value) {
+
+            if (value === null || value === undefined) {
+                return "";
+            }
+
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+
+        }
+
+
+        function safeUrl(value) {
+
+            try {
+
+                const url =
+                    new URL(value, window.location.origin);
+
+                if (
+                    url.protocol === "http:" ||
+                    url.protocol === "https:"
+                ) {
+                    return url.href;
+                }
+
+            } catch (error) {}
+
+            return "#";
+
+        }
+
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        function showPage(page) {
+
+            document
+                .querySelectorAll(".page")
+                .forEach(section => {
+                    section.classList.add("hidden");
+                });
+
+
+            const target =
+                $("page-" + page);
+
+            if (target) {
+                target.classList.remove("hidden");
+            }
+
+
+            document
+                .querySelectorAll(".navButton")
+                .forEach(button => {
+
+                    const active =
+                        button.dataset.page === page;
+
+                    button.classList.toggle(
+                        "bg-radar-50",
+                        active
+                    );
+
+                    button.classList.toggle(
+                        "text-radar-700",
+                        active
+                    );
+
+                    button.classList.toggle(
+                        "dark:bg-slate-900",
+                        active
+                    );
+
+                    button.classList.toggle(
+                        "dark:text-radar-300",
+                        active
+                    );
+
+                });
+
+
+            $("mobileSidebar").classList.add("hidden");
+
+
+            if (page === "opportunities") {
+                loadOpportunities();
+            }
+
+            if (page === "dashboard") {
+                loadDashboard();
+            }
+
+        }
+
+
+        document
+            .querySelectorAll(".navButton, [data-page]")
+            .forEach(button => {
+
+                button.addEventListener("click", () => {
+
+                    const page =
+                        button.dataset.page;
+
+                    if (page) {
+                        showPage(page);
+                    }
+
+                });
+
+            });
+
+
+        $("mobileMenuButton").addEventListener(
+            "click",
+            () => {
+
+                $("mobileSidebar")
+                    .classList.toggle("hidden");
+
+            }
+        );
+
+
+        $("refreshOpportunities").addEventListener(
+            "click",
+            loadOpportunities
+        );
+
+
+        /* =========================
+           PROFILE
+        ========================= */
+
+        $("profileButton").addEventListener(
+            "click",
+            () => showPage("profile")
+        );
+
+
+        $("editProfileButton").addEventListener(
+    "click",
+    async () => {
+
+        const user = await fetch("/users/me", {
+            headers: {
+                Authorization: "Bearer " + localStorage.getItem("token")
+            }
+        }).then(r => r.json());
+
+        const name = prompt(
+            "Nome completo:",
+            user.name || ""
+        );
+
+        if (name === null) return;
+
+        const phone = prompt(
+            "Telefone:",
+            user.phone || ""
+        );
+
+        if (phone === null) return;
+
+        const accountType = prompt(
+            "Tipo de conta:\npessoa_fisica\nprofissional\nempresa",
+            user.account_type || "pessoa_fisica"
+        );
+
+        if (accountType === null) return;
+
+        const response = await fetch("/users/me/profile", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + localStorage.getItem("token")
+            },
+            body: JSON.stringify({
+                name: name,
+                phone: phone,
+                account_type: accountType
+            })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            alert(
+                "Não foi possível salvar o perfil:\n" +
+                (result.detail || "Erro desconhecido.")
+            );
+            return;
+        }
+
+        alert("Perfil atualizado com sucesso.");
+
+        await loadApplication();
+    }
+);
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const accountType = document.getElementById("registerAccountType");
+    const cpfGroup = document.getElementById("registerCpfGroup");
+    const cnpjGroup = document.getElementById("registerCnpjGroup");
+    const birthDateGroup = document.getElementById("registerBirthDateGroup");
+    const professionalTypeGroup = document.getElementById("registerProfessionalTypeGroup");
+    const companyNameGroup = document.getElementById("registerCompanyNameGroup");
+
+    function updateRegisterFields() {
+        const type = accountType ? accountType.value : "pessoa_fisica";
+
+        cpfGroup?.classList.toggle("hidden", type === "empresa");
+        cnpjGroup?.classList.toggle("hidden", type !== "empresa");
+        birthDateGroup?.classList.toggle("hidden", type === "empresa");
+        professionalTypeGroup?.classList.toggle("hidden", type !== "profissional");
+        companyNameGroup?.classList.toggle("hidden", type !== "empresa");
+
+        const cpf = document.getElementById("registerCpf");
+        const cnpj = document.getElementById("registerCnpj");
+        const birthDate = document.getElementById("registerBirthDate");
+        const professionalType = document.getElementById("registerProfessionalType");
+        const companyName = document.getElementById("registerCompanyName");
+
+        if (cpf) cpf.required = type !== "empresa";
+        if (cnpj) cnpj.required = type === "empresa";
+        if (birthDate) birthDate.required = type !== "empresa";
+        if (professionalType) professionalType.required = type === "profissional";
+        if (companyName) companyName.required = type === "empresa";
+    }
+
+    if (accountType) {
+        accountType.addEventListener("change", updateRegisterFields);
+        updateRegisterFields();
+    }
+});
+document.addEventListener("DOMContentLoaded", function () {
+
+    const loginScreen = document.getElementById("loginScreen");
+    const registerScreen = document.getElementById("registerScreen");
+    const showRegisterButton = document.getElementById("showRegisterButton");
+    const backToLoginButton = document.getElementById("backToLoginButton");
+
+    if (showRegisterButton) {
+        showRegisterButton.addEventListener("click", function () {
+            loginScreen.classList.add("hidden");
+            registerScreen.classList.remove("hidden");
+        });
+    }
+
+    if (backToLoginButton) {
+        backToLoginButton.addEventListener("click", function () {
+            registerScreen.classList.add("hidden");
+            loginScreen.classList.remove("hidden");
+        });
+    }
+
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    function senhaForte(senha) {
+        if (senha.length < 8) return false;
+        if (!/[A-Z]/.test(senha)) return false;
+        if (!/[a-z]/.test(senha)) return false;
+        if (!/\d/.test(senha)) return false;
+        if (!/[^A-Za-z0-9]/.test(senha)) return false;
+        return true;
+    }
+    function telefoneValido(telefone) {
+        const numeros = apenasNumeros(telefone);
+
+        if (numeros.length !== 10 && numeros.length !== 11) {
+            return false;
+        }
+
+        if (/^(\d)\1+$/.test(numeros)) {
+            return false;
+        }
+
+        return true;
+    }
+    const registerForm = document.getElementById("registerForm");
+    const registerMessage = document.getElementById("registerMessage");
+
+    if (registerForm) {
+        registerForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            registerMessage.className = "rounded-xl bg-slate-100 p-3 text-sm dark:bg-slate-800";
+            registerMessage.textContent = "Criando sua conta...";
+            registerMessage.classList.remove("hidden");
+
+            const data = {
+                name: document.getElementById("registerName").value.trim(),
+                display_name: document.getElementById("registerDisplayName").value.trim() || null,
+                email: document.getElementById("registerEmail").value.trim(),
+                password: document.getElementById("registerPassword").value,
+                phone: document.getElementById("registerPhone").value.trim(),
+                cpf: document.getElementById("registerCpf").value.trim(),
+                cnpj: document.getElementById("registerCnpj").value.trim(),
+                birth_date: document.getElementById("registerBirthDate").value || null,
+                account_type: document.getElementById("registerAccountType").value,
+                professional_type: document.getElementById("registerProfessionalType").value.trim(),
+                company_name: document.getElementById("registerCompanyName").value.trim(),
+                terms_accepted: document.getElementById("registerTerms").checked,
+                privacy_accepted: document.getElementById("registerPrivacy").checked
+            };
+
+            try {
+                const response = await fetch("/auth/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.detail || "Não foi possível criar a conta.");
+                }
+
+                registerMessage.className = "rounded-xl bg-emerald-100 p-3 text-sm text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300";
+                registerMessage.textContent = "Conta criada com sucesso! Você já pode entrar no RADAR.";
+
+                document.getElementById("loginEmail").value = data.email;
+
+                setTimeout(function () {
+                    document.getElementById("registerScreen").classList.add("hidden");
+                    document.getElementById("loginScreen").classList.remove("hidden");
+                    registerForm.reset();
+                    registerMessage.classList.add("hidden");
+                }, 1200);
+
+            } catch (error) {
+
+                registerMessage.className = "rounded-xl bg-red-100 p-3 text-sm text-red-700 dark:bg-red-900/30 dark:text-red-300";
+                registerMessage.textContent = error.message || "Erro ao criar a conta.";
+                registerMessage.classList.remove("hidden");
+            }
+        });
+    }
+
+});
+</script>
+<div id="legalModal" class="hidden fixed inset-0 z-[100] overflow-y-auto bg-black/60 p-4">
+
+    <div class="mx-auto my-8 w-full max-w-4xl rounded-3xl bg-white shadow-2xl dark:bg-slate-900">
+
+        <div class="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4 dark:border-slate-800 dark:bg-slate-900">
+
+            <div>
+                <h2 id="legalModalTitle" class="text-xl font-black">
+                    Documento
+                </h2>
+
+                <p class="text-xs text-slate-500 dark:text-slate-400">
+                    Versão 1.0
+                </p>
+            </div>
+
+            <button
+                type="button"
+                id="closeLegalModal"
+                class="rounded-xl px-3 py-2 text-xl font-bold transition hover:bg-slate-100 dark:hover:bg-slate-800"
+                aria-label="Fechar documento"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div id="legalModalContent" class="max-h-[70vh] overflow-y-auto px-6 py-6 text-sm leading-7 text-slate-700 dark:text-slate-300">
+        </div>
+
+        <div class="flex justify-end border-t border-slate-200 px-6 py-4 dark:border-slate-800">
+
+            <button
+                type="button"
+                id="closeLegalModalBottom"
+                class="rounded-xl bg-radar-600 px-5 py-3 font-bold text-white transition hover:bg-radar-700"
+            >
+                Fechar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const legalModal = document.getElementById("legalModal");
+    const legalModalTitle = document.getElementById("legalModalTitle");
+    const legalModalContent = document.getElementById("legalModalContent");
+    const closeLegalModal = document.getElementById("closeLegalModal");
+    const closeLegalModalBottom = document.getElementById("closeLegalModalBottom");
+
+    function openLegalDocument(type) {
+
+        if (type === "terms") {
+
+            legalModalTitle.textContent = "Termos de Uso";
+
+            legalModalContent.innerHTML = `
+                <h3 class="mb-2 text-lg font-bold">1. Apresentação</h3>
+                <p class="mb-5">
+                    Estes Termos de Uso estabelecem as condições para utilização da plataforma RADAR,
+                    incluindo seus serviços, recursos, funcionalidades, planos e ferramentas.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">2. Aceitação</h3>
+                <p class="mb-5">
+                    Ao criar uma conta ou utilizar o RADAR, o usuário declara que leu e compreendeu
+                    estes Termos e que concorda com as condições aplicáveis à utilização da plataforma.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">3. Cadastro e segurança da conta</h3>
+                <p class="mb-5">
+                    O usuário deve fornecer informações verdadeiras, completas e atualizadas quando
+                    exigidas para a utilização de determinado recurso. O usuário também deve proteger
+                    suas credenciais e não permitir utilização indevida de sua conta.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">4. Uso permitido</h3>
+                <p class="mb-5">
+                    O RADAR deve ser utilizado de maneira lícita, ética e compatível com estes Termos,
+                    com a legislação aplicável e com as regras de segurança da plataforma.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">5. Uso indevido</h3>
+                <p class="mb-5">
+                    É proibida a utilização da plataforma para fraude, invasão, tentativa de obtenção
+                    não autorizada de dados, exploração de vulnerabilidades, abuso de recursos,
+                    automação maliciosa, envio de spam, impersonação ou outras práticas ilícitas.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">6. Inteligência artificial</h3>
+                <p class="mb-5">
+                    Alguns recursos do RADAR podem utilizar inteligência artificial para análise,
+                    classificação, organização, geração de sugestões e identificação de oportunidades.
+                    Resultados automatizados podem exigir análise humana e não constituem garantia
+                    de resultado específico.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">7. Planos, preços e contratação</h3>
+                <p class="mb-5">
+                    Quando houver serviços pagos, as informações sobre preço, características,
+                    limitações, período, forma de cobrança, renovação e condições de cancelamento
+                    serão apresentadas antes da contratação, de forma clara e acessível.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">8. Direitos do consumidor</h3>
+                <p class="mb-5">
+                    Nas relações de consumo, serão observadas as normas de proteção e defesa do
+                    consumidor aplicáveis, inclusive aquelas relacionadas à oferta, informação,
+                    contratação, atendimento, cancelamento e direito de arrependimento quando
+                    legalmente aplicável.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">9. Suspensão e encerramento</h3>
+                <p class="mb-5">
+                    A plataforma poderá restringir ou suspender uma conta quando houver fundamento
+                    relacionado à segurança, fraude, violação destes Termos ou exigência legal.
+                    Medidas de segurança deverão observar critérios proporcionais e, quando aplicável,
+                    mecanismos de contestação e suporte.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">10. Documentos enviados</h3>
+                <p class="mb-5">
+                    Quando o envio de documentos for necessário para determinada finalidade legítima,
+                    os arquivos serão tratados conforme a Política de Privacidade e as medidas de
+                    segurança aplicáveis.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">11. Propriedade intelectual</h3>
+                <p class="mb-5">
+                    A plataforma, sua identidade visual, código, funcionalidades e demais elementos
+                    protegidos pertencem aos respectivos titulares e não podem ser utilizados,
+                    reproduzidos ou explorados sem autorização quando exigida.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">12. Alterações</h3>
+                <p class="mb-5">
+                    Estes Termos poderão ser atualizados para refletir alterações legais, técnicas
+                    ou comerciais. Quando necessário, uma nova versão será apresentada ao usuário
+                    para ciência e/ou nova aceitação.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">13. Legislação aplicável</h3>
+                <p class="mb-5">
+                    A aplicação destes Termos observará a legislação aplicável à relação estabelecida
+                    com o usuário, sem prejuízo dos direitos que não possam ser afastados por lei.
+                </p>
+
+                <p class="mt-8 text-xs text-slate-500">
+                    Documento sujeito à revisão jurídica antes da disponibilização comercial definitiva.
+                </p>
+            `;
+
+        } else {
+
+            legalModalTitle.textContent = "Política de Privacidade";
+
+            legalModalContent.innerHTML = `
+                <h3 class="mb-2 text-lg font-bold">1. Objetivo</h3>
+                <p class="mb-5">
+                    Esta Política explica como o RADAR trata dados pessoais durante o cadastro,
+                    utilização da plataforma, atendimento, segurança e prestação dos serviços.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">2. Dados tratados</h3>
+                <p class="mb-5">
+                    Dependendo da funcionalidade utilizada, poderão ser tratados dados de cadastro,
+                    contato, informações profissionais ou empresariais, dados necessários à
+                    autenticação, registros técnicos, informações de segurança e documentos
+                    fornecidos pelo próprio usuário quando legitimamente necessários.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">3. Finalidades</h3>
+                <p class="mb-5">
+                    Os dados poderão ser utilizados para criação e gerenciamento da conta,
+                    autenticação, prestação dos serviços, atendimento, segurança, prevenção a
+                    fraudes, cumprimento de obrigações legais e melhoria da plataforma.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">4. Bases legais</h3>
+                <p class="mb-5">
+                    O tratamento será realizado de acordo com as bases legais aplicáveis previstas
+                    na legislação de proteção de dados, conforme a finalidade e a natureza de cada
+                    tratamento.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">5. Nome social e nome de exibição</h3>
+                <p class="mb-5">
+                    O RADAR poderá permitir que o usuário informe um nome social ou nome de exibição
+                    para sua identificação na interface, comunicações e atendimento, respeitadas
+                    as situações em que a identificação civil seja legalmente necessária.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">6. Documentos</h3>
+                <p class="mb-5">
+                    Documentos enviados pelo usuário deverão ser utilizados somente para finalidades
+                    legítimas e compatíveis com o serviço solicitado, com controles de acesso,
+                    proteção e retenção adequados.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">7. Segurança</h3>
+                <p class="mb-5">
+                    O RADAR adotará medidas técnicas e administrativas destinadas a proteger os
+                    dados contra acessos não autorizados, perda, destruição, alteração ou tratamento
+                    inadequado.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">8. Compartilhamento</h3>
+                <p class="mb-5">
+                    Dados poderão ser compartilhados quando necessário à prestação dos serviços,
+                    cumprimento de obrigação legal, exercício regular de direitos, prevenção de
+                    fraudes ou outras hipóteses permitidas pela legislação.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">9. Retenção e exclusão</h3>
+                <p class="mb-5">
+                    Os dados serão mantidos pelo período necessário às finalidades informadas ou
+                    pelo período exigido por obrigações legais e regulatórias. Quando não houver
+                    fundamento para manutenção, poderão ser eliminados ou anonimizados conforme
+                    aplicável.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">10. Direitos do titular</h3>
+                <p class="mb-5">
+                    O titular poderá exercer os direitos previstos na legislação aplicável,
+                    observadas as condições e limitações legais, incluindo solicitações relacionadas
+                    ao acesso, correção, atualização e demais direitos previstos na legislação de
+                    proteção de dados.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">11. Cookies e tecnologias semelhantes</h3>
+                <p class="mb-5">
+                    O RADAR poderá utilizar cookies e tecnologias semelhantes para funcionamento,
+                    segurança, preferências e, quando aplicável, análise de utilização.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">12. Incidentes de segurança</h3>
+                <p class="mb-5">
+                    Incidentes de segurança serão tratados de acordo com procedimentos internos
+                    e com as obrigações legais e regulatórias aplicáveis.
+                </p>
+
+                <h3 class="mb-2 text-lg font-bold">13. Alterações</h3>
+                <p class="mb-5">
+                    Esta Política poderá ser atualizada para refletir alterações legais, técnicas
+                    ou operacionais. Quando necessário, a nova versão será apresentada para ciência
+                    e/ou aceitação.
+                </p>
+
+                <p class="mt-8 text-xs text-slate-500">
+                    Documento sujeito à revisão jurídica antes da disponibilização comercial definitiva.
+                </p>
+            `;
+        }
+
+        legalModal.classList.remove("hidden");
+        document.body.classList.add("overflow-hidden");
+    }
+
+    function closeLegalDocument() {
+        legalModal.classList.add("hidden");
+        document.body.classList.remove("overflow-hidden");
+    }
+
+    window.openLegalDocument = openLegalDocument;
+
+    closeLegalModal.addEventListener("click", closeLegalDocument);
+    closeLegalModalBottom.addEventListener("click", closeLegalDocument);
+
+    legalModal.addEventListener("click", function (event) {
+        if (event.target === legalModal) {
+            closeLegalDocument();
+        }
+    });
+
+});
+</script>
+<script src='/js/app.js'></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const phone = document.getElementById("registerPhone");
+    const cpf = document.getElementById("registerCpf");
+    const cnpj = document.getElementById("registerCnpj");
+
+    function onlyNumbers(value) {
+        return value.replace(/\D/g, "");
+    }
+
+    if (phone) {
+        phone.addEventListener("input", function () {
+            let value = onlyNumbers(this.value).slice(0, 11);
+
+            if (value.length <= 10) {
+                value = value.replace(/^(\d{2})(\d{0,4})(\d{0,4}).*/, "($1) $2-$3");
+            } else {
+                value = value.replace(/^(\d{2})(\d{0,5})(\d{0,4}).*/, "($1) $2-$3");
+            }
+
+            this.value = value;
+        });
+    }
+
+    if (cpf) {
+        cpf.addEventListener("input", function () {
+            let value = onlyNumbers(this.value).slice(0, 11);
+            value = value.replace(/^(\d{3})(\d{0,3})(\d{0,3})(\d{0,2}).*/, "$1.$2.$3-$4");
+            this.value = value;
+        });
+    }
+
+    if (cnpj) {
+        cnpj.addEventListener("input", function () {
+            let value = onlyNumbers(this.value).slice(0, 14);
+            value = value.replace(/^(\d{2})(\d{0,3})(\d{0,3})(\d{0,4})(\d{0,2}).*/, "$1.$2.$3/$4-$5");
+            this.value = value;
+        });
+    }
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    function apenasNumeros(valor) {
+        return valor.replace(/\D/g, "");
+    }
+
+    function cpfValido(cpf) {
+        cpf = apenasNumeros(cpf);
+
+        if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
+            return false;
+        }
+
+        let soma = 0;
+
+        for (let i = 0; i < 9; i++) {
+            soma += parseInt(cpf.charAt(i)) * (10 - i);
+        }
+
+        let resto = (soma * 10) % 11;
+        if (resto === 10) resto = 0;
+
+        if (resto !== parseInt(cpf.charAt(9))) {
+            return false;
+        }
+
+        soma = 0;
+
+        for (let i = 0; i < 10; i++) {
+            soma += parseInt(cpf.charAt(i)) * (11 - i);
+        }
+
+        resto = (soma * 10) % 11;
+        if (resto === 10) resto = 0;
+
+        return resto === parseInt(cpf.charAt(10));
+    }
+
+    function cnpjValido(cnpj) {
+        cnpj = apenasNumeros(cnpj);
+
+        if (cnpj.length !== 14 || /^(\d)\1{13}$/.test(cnpj)) {
+            return false;
+        }
+
+        let tamanho = 12;
+        let numeros = cnpj.substring(0, tamanho);
+        let digitos = cnpj.substring(tamanho);
+
+        let soma = 0;
+        let pos = 5;
+
+        for (let i = 0; i < tamanho; i++) {
+            soma += parseInt(numeros.charAt(i)) * pos;
+            pos--;
+
+            if (pos < 2) {
+                pos = 9;
+            }
+        }
+
+        let resultado = soma % 11;
+        let primeiroDigito = resultado < 2 ? 0 : 11 - resultado;
+
+        if (primeiroDigito !== parseInt(digitos.charAt(0))) {
+            return false;
+        }
+
+        tamanho = 13;
+        numeros = cnpj.substring(0, tamanho);
+        soma = 0;
+        pos = 6;
+
+        for (let i = 0; i < tamanho; i++) {
+            soma += parseInt(numeros.charAt(i)) * pos;
+            pos--;
+
+            if (pos < 2) {
+                pos = 9;
+            }
+        }
+
+        resultado = soma % 11;
+        let segundoDigito = resultado < 2 ? 0 : 11 - resultado;
+
+        return segundoDigito === parseInt(digitos.charAt(1));
+    }
+
+    const registerForm = document.getElementById("registerForm");
+    const accountType = document.getElementById("registerAccountType");
+
+    if (registerForm) {
+        registerForm.addEventListener("submit", function (event) {
+
+            const tipo = accountType ? accountType.value : "pessoa_fisica";
+
+            const senha = document.getElementById("registerPassword");
+            const telefone = document.getElementById("registerPhone");
+            const cpf = document.getElementById("registerCpf");
+            const cnpj = document.getElementById("registerCnpj");
+
+            if (senha && !senhaForte(senha.value)) {
+                event.preventDefault();
+                alert("A senha deve ter pelo menos 8 caracteres, incluindo letra maiúscula, letra minúscula, número e caractere especial.");
+                senha.focus();
+                return;
+            }
+
+            if (telefone && !telefoneValido(telefone.value)) {
+                event.preventDefault();
+                alert("Digite um telefone válido com DDD.");
+                telefone.focus();
+                return;
+            }
+
+            if (tipo !== "empresa" && cpf && !cpfValido(cpf.value)) {
+                event.preventDefault();
+                alert("Digite um CPF válido.");
+                cpf.focus();
+                return;
+            }
+
+            if (tipo === "empresa" && cnpj && !cnpjValido(cnpj.value)) {
+                event.preventDefault();
+                alert("Digite um CNPJ válido.");
+                cnpj.focus();
+                return;
+            }
+        });
+    }
+});
+</script><script>
+document.addEventListener("DOMContentLoaded", function () {
+    const senha = document.getElementById("registerPassword");
+
+    if (!senha || document.getElementById("toggleRegisterPassword")) {
+        return;
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "relative";
+
+    senha.parentNode.insertBefore(wrapper, senha);
+    wrapper.appendChild(senha);
+
+    senha.classList.add("pr-20");
+
+    const botao = document.createElement("button");
+    botao.type = "button";
+    botao.id = "toggleRegisterPassword";
+    botao.textContent = "Mostrar";
+    botao.className = "absolute right-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-gray-500 hover:text-gray-800";
+
+    botao.addEventListener("click", function () {
+        if (senha.type === "password") {
+            senha.type = "text";
+            botao.textContent = "Ocultar";
+        } else {
+            senha.type = "password";
+            botao.textContent = "Mostrar";
+        }
+    });
+
+    wrapper.appendChild(botao);
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const senha = document.getElementById("registerPassword");
+
+    if (!senha || document.getElementById("registerPasswordStrength")) {
+        return;
+    }
+
+    const indicador = document.createElement("div");
+    indicador.id = "registerPasswordStrength";
+    indicador.className = "mt-2 text-xs font-semibold";
+    indicador.textContent = "Força da senha: aguardando";
+
+    senha.parentNode.parentNode.appendChild(indicador);
+
+    senha.addEventListener("input", function () {
+        const valor = senha.value;
+
+        let pontos = 0;
+
+        if (valor.length >= 8) pontos++;
+        if (/[A-Z]/.test(valor)) pontos++;
+        if (/[a-z]/.test(valor)) pontos++;
+        if (/\d/.test(valor)) pontos++;
+        if (/[^A-Za-z0-9]/.test(valor)) pontos++;
+
+        if (!valor) {
+            indicador.textContent = "Força da senha: aguardando";
+        } else if (pontos <= 2) {
+            indicador.textContent = "Força da senha: fraca";
+        } else if (pontos <= 4) {
+            indicador.textContent = "Força da senha: média";
+        } else {
+            indicador.textContent = "Força da senha: forte";
+        }
+    });
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const senha = document.getElementById("registerPassword");
+
+    if (!senha || document.getElementById("registerPasswordRequirements")) {
+        return;
+    }
+
+    const requisitos = document.createElement("div");
+    requisitos.id = "registerPasswordRequirements";
+    requisitos.className = "mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs shadow-sm dark:border-slate-700 dark:bg-slate-900/70";
+
+    requisitos.innerHTML = `
+        <div class="mb-2 font-semibold text-slate-700 dark:text-slate-200">Requisitos da senha</div><div class="grid grid-cols-1 gap-1.5 sm:grid-cols-2"><div id="reqLength" class="flex items-center gap-2 rounded-lg px-2 py-1">○ <span>Pelo menos 8 caracteres</span></div><div id="reqUpper" class="flex items-center gap-2 rounded-lg px-2 py-1">○ <span>Uma letra maiúscula</span></div><div id="reqLower" class="flex items-center gap-2 rounded-lg px-2 py-1">○ <span>Uma letra minúscula</span></div><div id="reqNumber" class="flex items-center gap-2 rounded-lg px-2 py-1">○ <span>Um número</span></div><div id="reqSpecial" class="flex items-center gap-2 rounded-lg px-2 py-1">○ <span>Um caractere especial</span></div></div>
+    `;
+
+    senha.parentNode.parentNode.appendChild(requisitos);
+
+    function atualizarRequisitos() {
+        const valor = senha.value;
+
+        const regras = {
+            reqLength: valor.length >= 8,
+            reqUpper: /[A-Z]/.test(valor),
+            reqLower: /[a-z]/.test(valor),
+            reqNumber: /\d/.test(valor),
+            reqSpecial: /[^A-Za-z0-9]/.test(valor)
+        };
+
+        Object.entries(regras).forEach(([id, valido]) => {
+            const elemento = document.getElementById(id);
+
+            if (!elemento) return;
+
+            elemento.querySelector("span") ? null : null; elemento.firstChild.textContent = valido ? "✓" : "○";
+
+            elemento.classList.toggle("text-green-600", valido); elemento.classList.toggle("text-slate-500", !valido); elemento.classList.toggle("bg-green-50", valido); elemento.classList.toggle("dark:bg-green-950/30", valido); elemento.classList.toggle("bg-green-50", valido); elemento.classList.toggle("dark:bg-green-950/30", valido);
+        });
+    }
+
+    senha.addEventListener("input", atualizarRequisitos);
+    atualizarRequisitos();
+});
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

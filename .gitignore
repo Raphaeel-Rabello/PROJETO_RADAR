@@ -13,3 +13,6 @@ users_recuperado.*
 ver_estrutura_radar.py
 RADAR_DIAGNOSTICO.txt
 _ARQUIVO_RADAR/
+
+# Backups locais do frontend
+static/index.html.*_funcionando

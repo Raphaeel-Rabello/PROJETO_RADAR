@@ -1,10 +1,13 @@
+
+import os
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 from argon2 import PasswordHasher
-from argon2.exceptions import VerifyMismatchError, VerificationError
-
-from fastapi import HTTPException
+from argon2.exceptions import (
+    VerifyMismatchError,
+    VerificationError,
+)
 from jose import JWTError, jwt
 
 
@@ -12,9 +15,15 @@ from jose import JWTError, jwt
 # CONFIGURAÇÕES DE SEGURANÇA
 # =========================================================
 
-SECRET_KEY = "RADAR_CHANGE_THIS_SECRET_KEY_IN_PRODUCTION"
+SECRET_KEY = os.getenv("RADAR_SECRET_KEY", "")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24
+
+if len(SECRET_KEY) < 32:
+    raise RuntimeError(
+        "Configure RADAR_SECRET_KEY no ambiente de produção "
+        "com pelo menos 32 caracteres."
+    )
 
 
 # =========================================================
@@ -29,48 +38,31 @@ password_hasher = PasswordHasher()
 # =========================================================
 
 def hash_password(password: str) -> str:
-    """
-    Gera um novo hash de senha usando Argon2.
-    """
-
+    """Gera um hash seguro usando Argon2."""
     return password_hasher.hash(password)
 
 
 def verify_password(
     plain_password: str,
-    hashed_password: str
+    hashed_password: str,
 ) -> bool:
-    """
-    Verifica uma senha contra um hash Argon2.
-
-    Também mantém compatibilidade com hashes bcrypt
-    que eventualmente existam no banco.
-    """
+    """Valida senhas armazenadas em Argon2 ou bcrypt."""
 
     if not plain_password or not hashed_password:
         return False
-
-    # -----------------------------------------------------
-    # HASH ARGON2
-    # -----------------------------------------------------
 
     if hashed_password.startswith("$argon2"):
         try:
             return password_hasher.verify(
                 hashed_password,
-                plain_password
+                plain_password,
             )
-
         except (
             VerifyMismatchError,
             VerificationError,
-            ValueError
+            ValueError,
         ):
             return False
-
-    # -----------------------------------------------------
-    # HASH BCRYPT
-    # -----------------------------------------------------
 
     if hashed_password.startswith("$2"):
         try:
@@ -78,34 +70,22 @@ def verify_password(
 
             bcrypt_context = CryptContext(
                 schemes=["bcrypt"],
-                deprecated="auto"
+                deprecated="auto",
             )
-
             return bcrypt_context.verify(
                 plain_password,
-                hashed_password
+                hashed_password,
             )
-
         except Exception:
             return False
-
-    # -----------------------------------------------------
-    # FORMATO DESCONHECIDO
-    # -----------------------------------------------------
 
     return False
 
 
 def needs_password_rehash(
-    hashed_password: str
+    hashed_password: str,
 ) -> bool:
-    """
-    Informa se a senha precisa ser atualizada.
-
-    Hashes bcrypt antigos podem ser migrados para Argon2
-    depois de um login bem-sucedido.
-    """
-
+    """Indica se um hash antigo precisa ser migrado."""
     if not hashed_password:
         return True
 
@@ -118,46 +98,39 @@ def needs_password_rehash(
 
 def create_access_token(
     user_id: int,
-    expires_delta: Optional[timedelta] = None
+    expires_delta: Optional[timedelta] = None,
 ) -> str:
-    """
-    Cria um token JWT para o usuário autenticado.
-    """
+    """Cria um token JWT para o usuário autenticado."""
 
     if expires_delta is None:
         expires_delta = timedelta(
-            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+            minutes=ACCESS_TOKEN_EXPIRE_MINUTES,
         )
 
     expire = datetime.now(timezone.utc) + expires_delta
 
     payload = {
         "sub": str(user_id),
-        "exp": expire
+        "exp": expire,
     }
 
     return jwt.encode(
         payload,
         SECRET_KEY,
-        algorithm=ALGORITHM
+        algorithm=ALGORITHM,
     )
 
 
 def decode_access_token(
-    token: str
+    token: str,
 ) -> Optional[int]:
-    """
-    Decodifica o JWT e retorna o ID do usuário.
-
-    Retorna None quando o token é inválido,
-    expirado ou possui formato incorreto.
-    """
+    """Retorna o ID do usuário ou None se o token for inválido."""
 
     try:
         payload = jwt.decode(
             token,
             SECRET_KEY,
-            algorithms=[ALGORITHM]
+            algorithms=[ALGORITHM],
         )
 
         user_id = payload.get("sub")
@@ -170,6 +143,6 @@ def decode_access_token(
     except (
         JWTError,
         ValueError,
-        TypeError
+        TypeError,
     ):
         return None
